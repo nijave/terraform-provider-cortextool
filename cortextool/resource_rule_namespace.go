@@ -1,41 +1,40 @@
-package mimirtool
+package cortextool
 
 import (
 	"context"
 	"crypto/sha256"
 	"fmt"
-	"reflect"
-	"sort"
-
-	"github.com/grafana/mimir/pkg/mimirtool/rules"
-	"github.com/grafana/mimir/pkg/mimirtool/rules/rwrulefmt"
+	"github.com/grafana/cortex-tools/pkg/rules"
+	"github.com/grafana/cortex-tools/pkg/rules/rwrulefmt"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"reflect"
+	"sort"
 
 	"github.com/hashicorp/go-cty/cty"
 	"golang.org/x/exp/slices"
 	"gopkg.in/yaml.v3"
 )
 
-func resourceRulerNamespace() *schema.Resource {
+func resourceRuleNamespace() *schema.Resource {
 	return &schema.Resource{
 		Description: `
 * [Official documentation](https://grafana.com/docs/mimir/latest/)
 * [HTTP API](https://grafana.com/docs/mimir/latest/operators-guide/reference-http-api/#ruler)
 `,
 
-		CreateContext: rulerNamespaceCreate,
-		ReadContext:   rulerNamespaceRead,
-		UpdateContext: rulerNamespaceUpdate,
-		DeleteContext: rulerNamespaceDelete,
+		CreateContext: createRuleNamespace,
+		ReadContext:   readRuleNamespace,
+		UpdateContext: updateRuleNamespace,
+		DeleteContext: deleteRuleNamespace,
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
 		},
 
 		Schema: map[string]*schema.Schema{
 			"namespace": {
-				Description: "The name of the namespace to create in Grafana Mimir.",
+				Description: "The name of the namespace to create in Grafana",
 				Type:        schema.TypeString,
 				Required:    true,
 			},
@@ -82,20 +81,20 @@ func checkRecordingRules(ruleNamespace rules.RuleNamespace, strict bool) error {
 	return nil
 }
 
-func getRuleNamespacesFromMimir(ctx context.Context, d *schema.ResourceData, meta any) ([]rwrulefmt.RuleGroup, error) {
-	client := meta.(*client).cli
+func getRuleNamespace(ctx context.Context, d *schema.ResourceData, meta any) (
+	[]rwrulefmt.RuleGroup, error) {
+	client := *meta.(*client).cli
 	namespace := d.Get("namespace").(string)
-	// namespace is required as per the definition above as such we have either nothing or one namespace
 
-	rulesGroups, err := client.ListRules(ctx, namespace)
+	ruleGroups, err := client.ListRules(ctx, namespace)
 	if err != nil {
 		return nil, err
 	}
-	return rulesGroups[namespace], nil
+	return ruleGroups[namespace], nil
 }
 
-func rulerNamespaceCreate(ctx context.Context, d *schema.ResourceData, meta any) diag.Diagnostics {
-	client := meta.(*client).cli
+func createRuleNamespace(ctx context.Context, d *schema.ResourceData, meta any) diag.Diagnostics {
+	client := *meta.(*client).cli
 	namespace := d.Get("namespace").(string)
 	ruleGroup := d.Get("config_yaml").(string)
 	strictRecordingRuleCheck := d.Get("strict_recording_rule_check").(bool)
@@ -118,12 +117,12 @@ func rulerNamespaceCreate(ctx context.Context, d *schema.ResourceData, meta any)
 	}
 
 	d.SetId(hash(namespace))
-	return rulerNamespaceRead(ctx, d, meta)
+	return readRuleNamespace(ctx, d, meta)
 }
 
-func rulerNamespaceRead(ctx context.Context, d *schema.ResourceData, meta any) diag.Diagnostics {
+func readRuleNamespace(ctx context.Context, d *schema.ResourceData, meta any) diag.Diagnostics {
 	var diags diag.Diagnostics
-	client := meta.(*client).cli
+	client := *meta.(*client).cli
 	namespace := d.Get("namespace").(string)
 
 	remoteNamespaceRuleGroup, err := client.ListRules(ctx, namespace)
@@ -143,18 +142,18 @@ func rulerNamespaceRead(ctx context.Context, d *schema.ResourceData, meta any) d
 	return diags
 }
 
-func rulerNamespaceUpdate(ctx context.Context, d *schema.ResourceData, meta any) diag.Diagnostics {
+func updateRuleNamespace(ctx context.Context, d *schema.ResourceData, meta any) diag.Diagnostics {
 	var diags diag.Diagnostics
-	client := meta.(*client).cli
+	client := *meta.(*client).cli
 	namespace := d.Get("namespace").(string)
 	ruleGroup := d.Get("config_yaml").(string)
 	strictRecordingRuleCheck := d.Get("strict_recording_rule_check").(bool)
 
-	errDiag := rulerNamespaceCreate(ctx, d, meta)
+	errDiag := createRuleNamespace(ctx, d, meta)
 	if errDiag != nil {
 		return errDiag
 	}
-	// Clean up the rules which need to be updated have been so with rulerNamespaceCreate,
+	// Clean up the rules which need to be updated have been so with createRuleNamespace,
 	// we still need to delete the rules which have been removed from the definition.
 	ruleNamespace, err := getRuleNamespaceFromYAML(ctx, ruleGroup)
 	if err != nil {
@@ -170,8 +169,8 @@ func rulerNamespaceUpdate(ctx context.Context, d *schema.ResourceData, meta any)
 		nsGroupNames = append(nsGroupNames, group.Name)
 	}
 
-	// the ones which are configured in the rulers as per rulerNamespaceRead
-	localNamespaces, err := getRuleNamespacesFromMimir(ctx, d, meta)
+	// the ones which are configured in the rulers as per readRuleNamespace
+	localNamespaces, err := getRuleNamespace(ctx, d, meta)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -192,14 +191,22 @@ func rulerNamespaceUpdate(ctx context.Context, d *schema.ResourceData, meta any)
 	return diags
 }
 
-func rulerNamespaceDelete(ctx context.Context, d *schema.ResourceData, meta any) diag.Diagnostics {
+func deleteRuleNamespace(ctx context.Context, d *schema.ResourceData, meta any) diag.Diagnostics {
 	var diags diag.Diagnostics
-	client := meta.(*client).cli
+	client := *meta.(*client).cli
 	namespace := d.Get("namespace").(string)
 
-	err := client.DeleteNamespace(ctx, namespace)
+	ruleGroups, err := getRuleNamespace(ctx, d, meta)
 	if err != nil {
 		return diag.FromErr(err)
+	}
+
+	for _, groupName := range ruleGroups {
+		err :=
+			client.DeleteRuleGroup(ctx, namespace, groupName.Name)
+		if err != nil {
+			return diag.FromErr(err)
+		}
 	}
 
 	d.SetId("")

@@ -10,6 +10,9 @@ builds:
       # usage by users in CI/CD systems like Terraform Cloud where
       # they are unable to install libraries.
       - CGO_ENABLED=0
+      # cortextool is using Loki 1.6 which appears to be the problem.
+      # this is an old branch they aren't updating
+      - ASSUME_NO_MOVING_GC_UNSAFE_RISK_IT_WITH=go1.19
     mod_timestamp: '{{ .CommitTimestamp }}'
     flags:
       - -trimpath
@@ -23,6 +26,9 @@ builds:
     goarch:
       - amd64
       - arm64
+    ignore:
+      - goos: windows
+        goarch: arm64
     binary: '{{ .ProjectName }}_v{{ .Version }}'
 archives:
   - format: zip

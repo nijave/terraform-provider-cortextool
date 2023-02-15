@@ -28,7 +28,7 @@ website/node_modules
 website/vendor
 
 # built binary
-terraform-provider-mimirtool
+terraform-provider-cortextool
 
 # Test exclusions
 !command/test-fixtures/**/*.tfstate
