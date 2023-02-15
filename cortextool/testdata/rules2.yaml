@@ -1,0 +1,10 @@
+namespace: grafana-agent-traces
+groups:
+  - name: grafana-agent
+    rules:
+      - alert: LogWarnMessages
+        expr: |
+          sum(rate({deployment="grafana-agent-traces"} |= `level=warn` [1m])) > 0.1
+        for: 5m
+        labels:
+          team: sre

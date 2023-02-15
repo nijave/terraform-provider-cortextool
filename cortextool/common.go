@@ -1,4 +1,4 @@
-package mimirtool
+package cortextool
 
 import (
 	"crypto/sha256"
