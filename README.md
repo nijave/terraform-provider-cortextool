@@ -1,6 +1,6 @@
-# Terraform Provider Mimirtool
+# Terraform Provider cortextool
 
-Terraform provider [mimirtool](https://grafana.com/docs/mimir/latest/operators-guide/tools/mimirtool/). It can use to execute a number of common tasks that involve Grafana Mimir or Grafana Cloud Metrics.
+Terraform provider for [cortex-tools](https://github.com/grafana/cortex-tools). It uses cortextool to upload rules to Loki. Based off [mimirtool Terraform provider](https://registry.terraform.io/providers/ovh/mimirtool/latest/docs).
 
 ## Requirements
 

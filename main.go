@@ -2,9 +2,8 @@ package main
 
 import (
 	"flag"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/plugin"
-	"github.com/ovh/terraform-provider-mimirtool/mimirtool"
+	"github.com/nijave/terraform-provider-cortextool/cortextool"
 )
 
 // Run "go generate" to format example terraform files and generate the docs for the registry/website
@@ -34,8 +33,8 @@ func main() {
 
 	opts := &plugin.ServeOpts{
 		Debug:        debugMode,
-		ProviderAddr: "registry.terraform.io/ovh/mimirtool",
-		ProviderFunc: mimirtool.New(version, nil),
+		ProviderAddr: "registry.terraform.io/nijave/cortextool",
+		ProviderFunc: cortextool.New(version, nil),
 	}
 
 	plugin.Serve(opts)

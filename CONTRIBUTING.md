@@ -1,4 +1,4 @@
-# Contributing to terraform-provider-mixtool
+# Contributing to terraform-provider-cortextool
 
 This project accepts contributions. In order to contribute, you should
 pay attention to a few things:
@@ -17,8 +17,8 @@ and follow the DCO which is defined below.
 
 # Licensing for new files
 
-terraform-provider-mixtool is licensed under the Apache License 2.0. Anything
-contributed to terraform-provider-mixtool must be released under this license.
+terraform-provider-cortextool is licensed under the Apache License 2.0. Anything
+contributed to terraform-provider-cortextool must be released under this license.
 
 When introducing a new file into the project, please make sure it has a
 copyright header making clear under which license it's being released.

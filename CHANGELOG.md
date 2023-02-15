@@ -1,3 +1,3 @@
-## 0.1.0 (November 15, 2022)
+## 1.0.0 (February 18, 2023)
 
 Initial version
