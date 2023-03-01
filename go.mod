@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/grafana/cortex-tools v0.10.8-0.20221020130739-cb8190786e4b
-	github.com/hashicorp/terraform-plugin-docs v0.13.0
+	github.com/hashicorp/terraform-plugin-docs v0.14.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.25.0
 	golang.org/x/exp v0.0.0-20221230185412-738e83a70c30
 )
@@ -45,7 +45,7 @@ require (
 	github.com/hashicorp/hc-install v0.5.0 // indirect
 	github.com/hashicorp/hcl/v2 v2.16.1 // indirect
 	github.com/hashicorp/logutils v1.0.0 // indirect
-	github.com/hashicorp/terraform-exec v0.17.3 // indirect
+	github.com/hashicorp/terraform-exec v0.18.0 // indirect
 	github.com/hashicorp/terraform-json v0.15.0 // indirect
 	github.com/hashicorp/terraform-plugin-go v0.14.3 // indirect
 	github.com/hashicorp/terraform-plugin-log v0.8.0
@@ -78,7 +78,7 @@ require (
 	github.com/prometheus/common v0.39.0 // indirect
 	github.com/prometheus/common/sigv4 v0.1.0 // indirect
 	github.com/prometheus/procfs v0.9.0 // indirect
-	github.com/prometheus/prometheus v1.99.0
+	github.com/prometheus/prometheus v1.99.0 // indirect
 	github.com/russross/blackfriday v1.6.0 // indirect
 	github.com/shopspring/decimal v1.3.1 // indirect
 	github.com/sirupsen/logrus v1.9.0 // indirect
@@ -89,7 +89,7 @@ require (
 	github.com/vmihailenco/tagparser v0.1.2 // indirect
 	github.com/weaveworks/common v0.0.0-20221201103051-7c2720a9024d // indirect
 	github.com/weaveworks/promrus v1.2.0 // indirect
-	github.com/zclconf/go-cty v1.12.1 // indirect
+	github.com/zclconf/go-cty v1.13.0 // indirect
 	go.uber.org/atomic v1.10.0 // indirect
 	go.uber.org/goleak v1.2.0 // indirect
 	golang.org/x/crypto v0.6.0 // indirect
@@ -106,10 +106,7 @@ require (
 	gopkg.in/yaml.v3 v3.0.1
 )
 
-require (
-	github.com/grafana/dskit v0.0.0-20211103155626-4e784973d341
-	github.com/grafana/loki v1.6.2-0.20211108134117-5b9f5b9efaa5
-)
+require github.com/grafana/dskit v0.0.0-20211103155626-4e784973d341
 
 require (
 	cloud.google.com/go v0.105.0 // indirect
@@ -173,6 +170,7 @@ require (
 	github.com/googleapis/enterprise-certificate-proxy v0.2.0 // indirect
 	github.com/googleapis/gax-go/v2 v2.7.0 // indirect
 	github.com/gorilla/mux v1.8.0 // indirect
+	github.com/grafana/loki v1.6.2-0.20211108134117-5b9f5b9efaa5 // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0 // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.0.0-rc.2.0.20201207153454-9f6bf00c00a7 // indirect
 	github.com/hashicorp/consul/api v1.18.0 // indirect
