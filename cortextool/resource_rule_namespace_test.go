@@ -6,11 +6,13 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"os"
+	"strconv"
 	"sync"
 	"testing"
 )
 
-const expectedInitialConfig = `groups:
+const expectedInitialConfig = `namespace: grafana-agent-traces
+groups:
     - name: grafana-agent
       rules:
         - alert: LogErrorMessages
@@ -33,7 +35,8 @@ const expectedInitialConfig = `groups:
             team: sre
 `
 
-const expectedInitialConfigAfterUpdate = `groups:
+const expectedInitialConfigAfterUpdate = `namespace: grafana-agent-traces
+groups:
     - name: grafana-agent
       rules:
         - alert: LogWarnMessages
@@ -42,20 +45,6 @@ const expectedInitialConfigAfterUpdate = `groups:
           for: 5m
           labels:
             team: sre
-`
-
-const testAccResourceNamespace = `
-resource "cortextool_rule_namespace" "demo" {
-	namespace = "grafana-agent-traces"
-	config_yaml = file("testdata/rules.yaml")
-  }
-`
-
-const testAccResourceNamespaceAfterUpdate = `
-resource "cortextool_rule_namespace" "demo" {
-	namespace = "grafana-agent-traces"
-	config_yaml = file("testdata/rules2.yaml")
- }
 `
 
 var testAccProviderFactories map[string]func() (*schema.Provider, error)
@@ -101,29 +90,110 @@ func TestAccResourceNamespace(t *testing.T) {
 	os.Setenv("CORTEXTOOL_ADDRESS", "http://localhost:8080")
 	defer os.Unsetenv("CORTEXTOOL_ADDRESS")
 
-	resource.UnitTest(t, resource.TestCase{
-		PreCheck:          func() { testAccPreCheck(t) },
-		ProviderFactories: testAccProviderFactories,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccResourceNamespace,
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(
-						"cortextool_rule_namespace.demo", "namespace", "grafana-agent-traces"),
-					resource.TestCheckResourceAttr(
-						"cortextool_rule_namespace.demo", "config_yaml", expectedInitialConfig),
-				),
-			},
-			{
-				Config: testAccResourceNamespaceAfterUpdate,
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(
-						"cortextool_rule_namespace.demo", "namespace", "grafana-agent-traces"),
-					resource.TestCheckResourceAttr(
-						"cortextool_rule_namespace.demo", "config_yaml", expectedInitialConfigAfterUpdate),
-				),
-			},
-		},
-	})
+	expectedInitial := map[bool]string{
+		false: expectedInitialConfig,
+		true:  "c429c8535b84806d61c9188e6df30f985067b2f74f1daac0e8f5350e6551e53f",
+	}
 
+	expectedUpdate := map[bool]string{
+		false: expectedInitialConfigAfterUpdate,
+		true:  "7d9dd2c1b2178501420cd5dbfa2d16535ed13544f41a966a1b53d461dc828d06",
+	}
+
+	envVar := "CORTEXTOOL_STORE_RULES_SHA256"
+	for _, storeAsHash := range []bool{false, true} {
+		os.Setenv(envVar, strconv.FormatBool(storeAsHash))
+
+		resource.UnitTest(t, resource.TestCase{
+			PreCheck:          func() { testAccPreCheck(t) },
+			ProviderFactories: testAccProviderFactories,
+			Steps: []resource.TestStep{
+				{
+					Config: `
+						resource "cortextool_rule_namespace" "demo" {
+							namespace = "grafana-agent-traces"
+							config_yaml = file("testdata/rules.yaml")
+						  }
+						`,
+					Check: resource.ComposeTestCheckFunc(
+						resource.TestCheckResourceAttr(
+							"cortextool_rule_namespace.demo", "namespace", "grafana-agent-traces"),
+						resource.TestCheckResourceAttr(
+							"cortextool_rule_namespace.demo", "config_yaml", expectedInitial[storeAsHash]),
+					),
+				},
+				{
+					Config: `
+						resource "cortextool_rule_namespace" "demo" {
+							namespace = "grafana-agent-traces"
+							config_yaml = file("testdata/rules2.yaml")
+						 }
+						`,
+					Check: resource.ComposeTestCheckFunc(
+						resource.TestCheckResourceAttr(
+							"cortextool_rule_namespace.demo", "namespace", "grafana-agent-traces"),
+						resource.TestCheckResourceAttr(
+							"cortextool_rule_namespace.demo", "config_yaml", expectedUpdate[storeAsHash]),
+					),
+				},
+			},
+		})
+
+		os.Unsetenv(envVar)
+	}
+}
+
+// Note: Not all whitespace changes will yield the same output from the linter.
+// Changing string format from a single yaml line to multiline with |
+// will result in different linted yaml even though the rules are logically the same
+func TestAccResourceNamespaceWhitespaceChanges(t *testing.T) {
+	os.Setenv("CORTEXTOOL_ADDRESS", "http://localhost:8080")
+	defer os.Unsetenv("CORTEXTOOL_ADDRESS")
+
+	expected := map[bool]string{
+		false: expectedInitialConfigAfterUpdate,
+		true:  "7d9dd2c1b2178501420cd5dbfa2d16535ed13544f41a966a1b53d461dc828d06",
+	}
+
+	envVar := "CORTEXTOOL_STORE_RULES_SHA256"
+	for _, storeAsHash := range []bool{false, true} {
+		os.Setenv(envVar, strconv.FormatBool(storeAsHash))
+
+		resource.UnitTest(t, resource.TestCase{
+			PreCheck:          func() { testAccPreCheck(t) },
+			ProviderFactories: testAccProviderFactories,
+			Steps: []resource.TestStep{
+				{
+					Config: `
+						resource "cortextool_rule_namespace" "demo" {
+							namespace = "grafana-agent-traces"
+							config_yaml = file("testdata/rules2.yaml")
+						  }
+						`,
+					Check: resource.ComposeTestCheckFunc(
+						resource.TestCheckResourceAttr(
+							"cortextool_rule_namespace.demo", "namespace", "grafana-agent-traces"),
+						resource.TestCheckResourceAttr(
+							"cortextool_rule_namespace.demo", "config_yaml", expected[storeAsHash]),
+					),
+				},
+				{
+					Config: `
+						resource "cortextool_rule_namespace" "demo" {
+							namespace = "grafana-agent-traces"
+							config_yaml = file("testdata/rules2_whitespace.yaml")
+						}
+						`,
+					Check: resource.ComposeTestCheckFunc(
+						resource.TestCheckResourceAttr(
+							"cortextool_rule_namespace.demo", "namespace", "grafana-agent-traces"),
+						resource.TestCheckResourceAttr(
+							"cortextool_rule_namespace.demo", "config_yaml", expected[storeAsHash]),
+					),
+				},
+			},
+		})
+
+		os.Unsetenv(envVar)
+	}
 }

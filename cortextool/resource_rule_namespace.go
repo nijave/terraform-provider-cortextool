@@ -2,8 +2,9 @@ package cortextool
 
 import (
 	"context"
+	"crypto/sha256"
+	"fmt"
 	"github.com/grafana/cortex-tools/pkg/rules"
-	"github.com/grafana/cortex-tools/pkg/rules/rwrulefmt"
 	"github.com/hashicorp/go-cty/cty"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -36,7 +37,7 @@ func resourceRuleNamespace() *schema.Resource {
 			"config_yaml": {
 				Description:      "The namespace's groups rules definition to create",
 				Type:             schema.TypeString,
-				StateFunc:        formatRuleNamespace,
+				StateFunc:        stateFunction,
 				ValidateDiagFunc: validateNamespaceYaml,
 				DiffSuppressFunc: diffNamespaceRules,
 				Required:         true,
@@ -55,22 +56,21 @@ func getRuleNamespaceFromYaml(configYaml string) (rules.RuleNamespace, error) {
 	return namespace, nil
 }
 
-func getRuleGroupsFromYaml(configYaml string) ([]rwrulefmt.RuleGroup, error) {
-	namespace, err := getRuleNamespaceFromYaml(configYaml)
-	if err != nil {
-		return nil, err
+func formatRuleNamespace(ruleNamespace rules.RuleNamespace) string {
+	newYamlBytes, _ := yaml.Marshal(&ruleNamespace)
+
+	if storeRulesSha256 {
+		configHash := sha256.Sum256(newYamlBytes)
+		return fmt.Sprintf("%x", configHash[:])
 	}
-	return namespace.Groups, nil
+
+	return string(newYamlBytes)
 }
 
-func formatRuleNamespace(any interface{}) string {
-	configYaml := any.(string)
-	namespace, err := getRuleNamespaceFromYaml(configYaml)
-	if err != nil {
-		return ""
-	}
-	newYamlBytes, _ := yaml.Marshal(&namespace)
-	return string(newYamlBytes)
+func stateFunction(meta any) string {
+	configYaml := meta.(string)
+	namespace, _ := getRuleNamespaceFromYaml(configYaml)
+	return formatRuleNamespace(namespace)
 }
 
 func validateNamespaceYaml(config any, k cty.Path) diag.Diagnostics {
@@ -92,41 +92,37 @@ func validateNamespaceYaml(config any, k cty.Path) diag.Diagnostics {
 
 func diffNamespaceRules(k, oldValue, newValue string, d *schema.ResourceData) bool {
 	// If we cannot unmarshal, as we cannot return an error, let's say there is a difference
-	oldGroup, err := getRuleGroupsFromYaml(oldValue)
+	oldNamespace, err := getRuleNamespaceFromYaml(oldValue)
 	if err != nil {
 		tflog.Warn(context.Background(), "Failed to unmarshal oldGroup value")
 		tflog.Debug(context.Background(), err.Error())
 		return false
 	}
 
-	newGroup, err := getRuleGroupsFromYaml(newValue)
+	newNamespace, err := getRuleNamespaceFromYaml(newValue)
 	if err != nil {
 		tflog.Warn(context.Background(), "Failed to unmarshal newGroup value")
 		tflog.Debug(context.Background(), err.Error())
 		return false
 	}
 
-	return rules.CompareNamespaces(rules.RuleNamespace{
-		Namespace: "",
-		Filepath:  "",
-		Groups:    oldGroup,
-	}, rules.RuleNamespace{
-		Namespace: "",
-		Filepath:  "",
-		Groups:    newGroup,
-	}).State == rules.Unchanged
+	return rules.CompareNamespaces(oldNamespace, newNamespace).State == rules.Unchanged
 }
 
 func getRuleNamespaceRemote(ctx context.Context, d *schema.ResourceData, meta any) (
-	[]rwrulefmt.RuleGroup, error) {
+	rules.RuleNamespace, error) {
 	client := *meta.(*providerData).cli
 	namespace := d.Get("namespace").(string)
 
 	ruleGroups, err := client.ListRules(ctx, namespace)
 	if err != nil {
-		return nil, err
+		return rules.RuleNamespace{}, err
 	}
-	return ruleGroups[namespace], nil
+	return rules.RuleNamespace{
+		Namespace: namespace,
+		Filepath:  "",
+		Groups:    ruleGroups[namespace],
+	}, nil
 }
 
 func createRuleNamespace(ctx context.Context, d *schema.ResourceData, meta any) diag.Diagnostics {
@@ -152,30 +148,14 @@ func createRuleNamespace(ctx context.Context, d *schema.ResourceData, meta any) 
 
 func readRuleNamespace(ctx context.Context, d *schema.ResourceData, meta any) diag.Diagnostics {
 	var diags diag.Diagnostics
-	client := *meta.(*providerData).cli
-	namespace := d.Get("namespace").(string)
 
-	remoteNamespaceRuleGroup, err := client.ListRules(ctx, namespace)
-	if err != nil {
-		if err.Error() == "requested resource not found" {
-			d.SetId("")
-			return diags
-		} else {
-			return diag.FromErr(err)
-		}
-	}
-
-	// Loki top level key is the namespace name while in the YAML definition the top level key is groups
-	// Let's rename the key to be able to have a nice difference
-	remoteNamespaceRuleGroup["groups"] = remoteNamespaceRuleGroup[namespace]
-	delete(remoteNamespaceRuleGroup, namespace)
-
-	configYamlBytes, err := yaml.Marshal(remoteNamespaceRuleGroup)
+	ruleNamespace, err := getRuleNamespaceRemote(ctx, d, meta)
 	if err != nil {
 		return diag.FromErr(err)
 	}
+	configString := formatRuleNamespace(ruleNamespace)
 
-	d.Set("config_yaml", string(configYamlBytes))
+	d.Set("config_yaml", configString)
 	return diags
 }
 
@@ -206,8 +186,8 @@ func updateRuleNamespace(ctx context.Context, d *schema.ResourceData, meta any) 
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	currentGroupsNames := make([]string, 0, len(localNamespaces))
-	for _, group := range localNamespaces {
+	currentGroupsNames := make([]string, 0, len(localNamespaces.Groups))
+	for _, group := range localNamespaces.Groups {
 		currentGroupsNames = append(currentGroupsNames, group.Name)
 	}
 
@@ -228,12 +208,12 @@ func deleteRuleNamespace(ctx context.Context, d *schema.ResourceData, meta any) 
 	client := *meta.(*providerData).cli
 	namespace := d.Get("namespace").(string)
 
-	ruleGroups, err := getRuleNamespaceRemote(ctx, d, meta)
+	ruleNamespace, err := getRuleNamespaceRemote(ctx, d, meta)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
-	for _, groupName := range ruleGroups {
+	for _, groupName := range ruleNamespace.Groups {
 		err :=
 			client.DeleteRuleGroup(ctx, namespace, groupName.Name)
 		if err != nil {

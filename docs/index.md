@@ -32,6 +32,7 @@ provider "cortextool" {
 - `api_key` (String, Sensitive) API key to use when contacting Grafana Loki. May alternatively be set via the `CORTEXTOOL_API_KEY` environment variable.
 - `api_user` (String) API user to use when contacting Grafana Loki. May alternatively be set via the `CORTEXTOOL_API_USER` environment variable.
 - `insecure_skip_verify` (Boolean) Skip TLS certificate verification. May alternatively be set via the `CORTEXTOOL_INSECURE_SKIP_VERIFY` environment variable.
+- `store_rules_sha256` (Boolean) Set to true if you want to save only the sha256sum instead of namespace's groups rules definition in the tfstate. May alternatively be set via the `CORTEXTOOL_STORE_RULES_SHA256` environment variable.
 - `tenant_id` (String) Tenant ID to use when contacting Grafana Loki. May alternatively be set via the `CORTEXTOOL_TENANT_ID` environment variable.
 - `tls_ca_path` (String) Certificate CA bundle to use to verify the Loki server's certificate. May alternatively be set via the `CORTEXTOOL_TLS_CA_PATH` environment variable.
 - `tls_cert_path` (String) Client TLS certificate file to use to authenticate to the Loki server. May alternatively be set via the `CORTEXTOOL_TLS_CERT_PATH` environment variable.

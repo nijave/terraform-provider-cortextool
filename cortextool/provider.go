@@ -17,6 +17,8 @@ func init() {
 	schema.DescriptionKind = schema.StringMarkdown
 }
 
+var storeRulesSha256 bool
+
 // New returns a newly created provider
 func New(version string, cortexClient *CortexRuleClient) func() *schema.Provider {
 	return func() *schema.Provider {
@@ -75,6 +77,12 @@ func New(version string, cortexClient *CortexRuleClient) func() *schema.Provider
 					DefaultFunc: schema.EnvDefaultFunc("CORTEXTOOL_INSECURE_SKIP_VERIFY", nil),
 					Description: "Skip TLS certificate verification. May alternatively be set via the `CORTEXTOOL_INSECURE_SKIP_VERIFY` environment variable.",
 				},
+				"store_rules_sha256": {
+					Type:        schema.TypeBool,
+					Optional:    true,
+					DefaultFunc: schema.EnvDefaultFunc("CORTEXTOOL_STORE_RULES_SHA256", false),
+					Description: "Set to true if you want to save only the sha256sum instead of namespace's groups rules definition in the tfstate. May alternatively be set via the `CORTEXTOOL_STORE_RULES_SHA256` environment variable.",
+				},
 			},
 			DataSourcesMap: map[string]*schema.Resource{},
 			ResourcesMap: map[string]*schema.Resource{
@@ -105,6 +113,8 @@ func configure(version string, p *schema.Provider, cortexClient *CortexRuleClien
 			}
 			c.cli = &cc
 		}
+
+		storeRulesSha256 = d.Get("store_rules_sha256").(bool)
 
 		return c, diags
 	}
