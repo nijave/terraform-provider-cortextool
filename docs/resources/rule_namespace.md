@@ -32,5 +32,3 @@ resource "cortextool_rule_namespace" "demo" {
 ### Read-Only
 
 - `id` (String) The ID of this resource.
-
-
