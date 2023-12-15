@@ -282,4 +282,6 @@ require (
 // Use fork of gocql that has gokit logs and Prometheus metrics - required
 replace github.com/gocql/gocql => github.com/grafana/gocql v0.0.0-20200605141915-ba5dc39ece85
 
+replace google.golang.org/grpc => google.golang.org/grpc v1.57.2
+
 replace github.com/prometheus/prometheus => github.com/prometheus/prometheus v0.43.1-0.20230419161410-69155c6ba1e9
