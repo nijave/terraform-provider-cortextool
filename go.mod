@@ -4,7 +4,7 @@ go 1.21
 
 require (
 	github.com/grafana/cortex-tools v0.11.0
-	github.com/hashicorp/terraform-plugin-docs v0.19.2
+	github.com/hashicorp/terraform-plugin-docs v0.19.3
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.34.0
 	golang.org/x/exp v0.0.0-20230713183714-613f0c0eb8a1
 )
@@ -39,8 +39,8 @@ require (
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/hashicorp/go-plugin v1.6.0 // indirect
 	github.com/hashicorp/go-uuid v1.0.3 // indirect
-	github.com/hashicorp/go-version v1.6.0 // indirect
-	github.com/hashicorp/hc-install v0.6.4 // indirect
+	github.com/hashicorp/go-version v1.7.0 // indirect
+	github.com/hashicorp/hc-install v0.7.0 // indirect
 	github.com/hashicorp/hcl/v2 v2.20.1 // indirect
 	github.com/hashicorp/logutils v1.0.0 // indirect
 	github.com/hashicorp/terraform-exec v0.21.0 // indirect
@@ -270,7 +270,7 @@ require (
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.21.0 // indirect
 	go4.org/netipx v0.0.0-20230125063823-8449b0a6169f // indirect
-	golang.org/x/mod v0.16.0 // indirect
+	golang.org/x/mod v0.17.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
 	golang.org/x/tools v0.13.0 // indirect
 	google.golang.org/api v0.162.0 // indirect
