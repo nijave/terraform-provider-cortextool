@@ -4,7 +4,7 @@ go 1.21
 
 require (
 	github.com/grafana/cortex-tools v0.11.0
-	github.com/hashicorp/terraform-plugin-docs v0.19.3
+	github.com/hashicorp/terraform-plugin-docs v0.19.4
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.34.0
 	golang.org/x/exp v0.0.0-20230713183714-613f0c0eb8a1
 )
