@@ -5,7 +5,7 @@ go 1.24.0
 require (
 	github.com/grafana/cortex-tools v0.11.4-0.20251128063340-e339c37a034f
 	github.com/hashicorp/terraform-plugin-docs v0.24.0
-	github.com/hashicorp/terraform-plugin-sdk/v2 v2.34.0
+	github.com/hashicorp/terraform-plugin-sdk/v2 v2.38.1
 	golang.org/x/exp v0.0.0-20230713183714-613f0c0eb8a1
 )
 
@@ -19,7 +19,7 @@ require (
 	github.com/aws/aws-sdk-go v1.44.327 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bgentry/speakeasy v0.1.0 // indirect
-	github.com/cespare/xxhash/v2 v2.2.0 // indirect
+	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/dennwc/varint v1.0.0 // indirect
 	github.com/edsrzf/mmap-go v1.1.0 // indirect
@@ -37,19 +37,19 @@ require (
 	github.com/hashicorp/go-cty v1.5.0
 	github.com/hashicorp/go-hclog v1.6.3 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
-	github.com/hashicorp/go-plugin v1.6.0 // indirect
+	github.com/hashicorp/go-plugin v1.7.0 // indirect
 	github.com/hashicorp/go-uuid v1.0.3 // indirect
 	github.com/hashicorp/go-version v1.7.0 // indirect
 	github.com/hashicorp/hc-install v0.9.2 // indirect
-	github.com/hashicorp/hcl/v2 v2.20.1 // indirect
+	github.com/hashicorp/hcl/v2 v2.24.0 // indirect
 	github.com/hashicorp/logutils v1.0.0 // indirect
 	github.com/hashicorp/terraform-exec v0.24.0 // indirect
 	github.com/hashicorp/terraform-json v0.27.2 // indirect
-	github.com/hashicorp/terraform-plugin-go v0.23.0 // indirect
+	github.com/hashicorp/terraform-plugin-go v0.29.0 // indirect
 	github.com/hashicorp/terraform-plugin-log v0.9.0
-	github.com/hashicorp/terraform-registry-address v0.2.3 // indirect
+	github.com/hashicorp/terraform-registry-address v0.4.0 // indirect
 	github.com/hashicorp/terraform-svchost v0.1.1 // indirect
-	github.com/hashicorp/yamux v0.1.1 // indirect
+	github.com/hashicorp/yamux v0.1.2 // indirect
 	github.com/huandu/xstrings v1.4.0 // indirect
 	github.com/imdario/mergo v0.3.16 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
@@ -71,18 +71,18 @@ require (
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	github.com/posener/complete v1.2.3 // indirect
 	github.com/prometheus/client_golang v1.16.0 // indirect
-	github.com/prometheus/client_model v0.4.0 // indirect
+	github.com/prometheus/client_model v0.6.0 // indirect
 	github.com/prometheus/common v0.44.0 // indirect
 	github.com/prometheus/common/sigv4 v0.1.0 // indirect
 	github.com/prometheus/procfs v0.11.1 // indirect
 	github.com/shopspring/decimal v1.3.1 // indirect
 	github.com/sirupsen/logrus v1.9.3 // indirect
 	github.com/spf13/cast v1.5.0 // indirect
-	github.com/stretchr/testify v1.9.0 // indirect
+	github.com/stretchr/testify v1.10.0 // indirect
 	github.com/vmihailenco/msgpack v4.0.4+incompatible // indirect
 	github.com/zclconf/go-cty v1.17.0 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
-	go.uber.org/goleak v1.2.1 // indirect
+	go.uber.org/goleak v1.3.0 // indirect
 	golang.org/x/crypto v0.45.0 // indirect
 	golang.org/x/net v0.47.0 // indirect
 	golang.org/x/oauth2 v0.27.0 // indirect
@@ -91,8 +91,8 @@ require (
 	golang.org/x/text v0.31.0 // indirect
 	google.golang.org/appengine v1.6.8 // indirect
 	google.golang.org/genproto v0.0.0-20240213162025-012b6fc9bca9 // indirect
-	google.golang.org/grpc v1.63.2 // indirect
-	google.golang.org/protobuf v1.34.0 // indirect
+	google.golang.org/grpc v1.75.1 // indirect
+	google.golang.org/protobuf v1.36.9 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1
 )
@@ -100,6 +100,7 @@ require (
 require github.com/grafana/dskit v0.0.0-20230908075806-579cf66fbf9b
 
 require (
+	cel.dev/expr v0.15.0 // indirect
 	cloud.google.com/go v0.112.0 // indirect
 	cloud.google.com/go/bigtable v1.18.1 // indirect
 	cloud.google.com/go/compute/metadata v0.3.0 // indirect
@@ -150,8 +151,7 @@ require (
 	github.com/census-instrumentation/opencensus-proto v0.4.1 // indirect
 	github.com/cespare/xxhash v1.1.0 // indirect
 	github.com/cloudflare/circl v1.6.1 // indirect
-	github.com/cncf/udpa/go v0.0.0-20220112060539-c52dc94e7fbe // indirect
-	github.com/cncf/xds/go v0.0.0-20230607035331-e9ce68804cb4 // indirect
+	github.com/cncf/xds/go v0.0.0-20240423153145-555b57ec207b // indirect
 	github.com/coreos/go-semver v0.3.0 // indirect
 	github.com/coreos/go-systemd/v22 v22.5.0 // indirect
 	github.com/cristalhq/hedgedhttp v0.7.2 // indirect
@@ -160,8 +160,8 @@ require (
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/efficientgo/core v1.0.0-rc.2 // indirect
 	github.com/efficientgo/e2e v0.14.1-0.20230710114240-c316eb95ae5b // indirect
-	github.com/envoyproxy/go-control-plane v0.11.1 // indirect
-	github.com/envoyproxy/protoc-gen-validate v1.0.2 // indirect
+	github.com/envoyproxy/go-control-plane v0.12.1-0.20240621013728-1eb8caab5155 // indirect
+	github.com/envoyproxy/protoc-gen-validate v1.0.4 // indirect
 	github.com/facette/natsort v0.0.0-20181210072756-2cd4dd1e2dcb // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
@@ -234,6 +234,7 @@ require (
 	github.com/opentracing-contrib/go-stdlib v1.0.0 // indirect
 	github.com/pierrec/lz4/v4 v4.1.18 // indirect
 	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c // indirect
+	github.com/planetscale/vtprotobuf v0.6.1-0.20240319094008-0393e58bdf10 // indirect
 	github.com/prometheus/alertmanager v0.26.0 // indirect
 	github.com/prometheus/exporter-toolkit v0.10.1-0.20230714054209-2f4150c63f97 // indirect
 	github.com/prometheus/prometheus v1.8.2-0.20220411232225-ce6a643ee88f // indirect
@@ -243,7 +244,7 @@ require (
 	github.com/soheilhy/cmux v0.1.5 // indirect
 	github.com/sony/gobreaker v0.5.0 // indirect
 	github.com/spaolacci/murmur3 v1.1.0 // indirect
-	github.com/spf13/afero v1.9.5 // indirect
+	github.com/spf13/afero v1.10.0 // indirect
 	github.com/stretchr/objx v0.5.2 // indirect
 	github.com/thanos-io/objstore v0.0.0-20230816175749-20395bffdf26 // indirect
 	github.com/uber/jaeger-client-go v2.30.0+incompatible // indirect
@@ -275,8 +276,8 @@ require (
 	golang.org/x/time v0.5.0 // indirect
 	golang.org/x/tools v0.38.0 // indirect
 	google.golang.org/api v0.162.0 // indirect
-	google.golang.org/genproto/googleapis/api v0.0.0-20240205150955-31a09d347014 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20240227224415-6ceb2ff114de // indirect
+	google.golang.org/genproto/googleapis/api v0.0.0-20240604185151-ef581f913117 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20250707201910-8d1bb00bc6a7 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	k8s.io/apimachinery v0.27.3 // indirect
@@ -293,12 +294,12 @@ replace github.com/grafana-tools/sdk => github.com/colega/grafana-tools-sdk v0.0
 
 replace github.com/prometheus/prometheus => github.com/prometheus/prometheus v0.43.1-0.20230419161410-69155c6ba1e9
 
-replace google.golang.org/grpc => google.golang.org/grpc v1.56.3
-
-// Loki depends on this version
-replace github.com/sercand/kuberesolver/v4 => github.com/sercand/kuberesolver/v4 v4.0.0-20230228224450-d8a3bdc2c3f7
+replace google.golang.org/grpc => google.golang.org/grpc v1.66.0
 
 replace github.com/thanos-io/objstore => github.com/thanos-io/objstore v0.0.0-20230201072718-11ffbc490204
+
+// Use kuberesolver v5 for gRPC 1.66+ compatibility
+replace github.com/sercand/kuberesolver/v4 => github.com/sercand/kuberesolver/v5 v5.1.1
 
 // Pin loki to the version cortex-tools requires
 replace github.com/grafana/loki => github.com/grafana/loki v1.6.2-0.20230803180300-1221658fc5bb
