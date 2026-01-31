@@ -3,7 +3,7 @@ module github.com/nijave/terraform-provider-cortextool
 go 1.21
 
 require (
-	github.com/grafana/cortex-tools v0.11.3
+	github.com/grafana/cortex-tools v0.11.4-0.20251128063340-e339c37a034f
 	github.com/hashicorp/terraform-plugin-docs v0.19.4
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.34.0
 	golang.org/x/exp v0.0.0-20230713183714-613f0c0eb8a1
@@ -187,8 +187,8 @@ require (
 	github.com/gogo/googleapis v1.4.0 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/gogo/status v1.1.1 // indirect
-	github.com/golang-jwt/jwt/v4 v4.5.1 // indirect
-	github.com/golang-jwt/jwt/v5 v5.2.1 // indirect
+	github.com/golang-jwt/jwt/v4 v4.5.2 // indirect
+	github.com/golang-jwt/jwt/v5 v5.2.2 // indirect
 	github.com/google/btree v1.1.2 // indirect
 	github.com/google/s2a-go v0.1.7 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.3.2 // indirect
