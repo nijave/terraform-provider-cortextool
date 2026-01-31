@@ -3,7 +3,7 @@ module github.com/nijave/terraform-provider-cortextool
 go 1.21
 
 require (
-	github.com/grafana/cortex-tools v0.11.0
+	github.com/grafana/cortex-tools v0.11.4-0.20251128063340-e339c37a034f
 	github.com/hashicorp/terraform-plugin-docs v0.19.4
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.34.0
 	golang.org/x/exp v0.0.0-20230713183714-613f0c0eb8a1
@@ -97,7 +97,7 @@ require (
 	gopkg.in/yaml.v3 v3.0.1
 )
 
-require github.com/grafana/dskit v0.0.0-20230905112532-e4f33b342cb6
+require github.com/grafana/dskit v0.0.0-20230908075806-579cf66fbf9b
 
 require (
 	cloud.google.com/go v0.112.0 // indirect
@@ -187,8 +187,8 @@ require (
 	github.com/gogo/googleapis v1.4.0 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/gogo/status v1.1.1 // indirect
-	github.com/golang-jwt/jwt/v4 v4.5.1 // indirect
-	github.com/golang-jwt/jwt/v5 v5.2.1 // indirect
+	github.com/golang-jwt/jwt/v4 v4.5.2 // indirect
+	github.com/golang-jwt/jwt/v5 v5.2.2 // indirect
 	github.com/google/btree v1.1.2 // indirect
 	github.com/google/s2a-go v0.1.7 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.3.2 // indirect
@@ -251,6 +251,8 @@ require (
 	github.com/uber/jaeger-lib v2.4.1+incompatible // indirect
 	github.com/vmihailenco/msgpack/v5 v5.4.1 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
+	github.com/weaveworks/common v0.0.0-20230713110358-22cda1cdbe0a // indirect
+	github.com/weaveworks/promrus v1.2.0 // indirect
 	github.com/willf/bitset v1.1.11 // indirect
 	github.com/willf/bloom v2.0.3+incompatible // indirect
 	github.com/yuin/goldmark v1.7.1 // indirect
@@ -284,10 +286,22 @@ require (
 	rsc.io/binaryregexp v0.2.0 // indirect
 )
 
-// Pin to the version cortex-tool uses since prometheus refactored where this package is located
+// Pin to the version cortex-tools uses since prometheus refactored where this package is located
 // Use fork of gocql that has gokit logs and Prometheus metrics - required
 replace github.com/gocql/gocql => github.com/grafana/gocql v0.0.0-20200605141915-ba5dc39ece85
 
-replace google.golang.org/grpc => google.golang.org/grpc v1.57.2
+replace github.com/grafana-tools/sdk => github.com/colega/grafana-tools-sdk v0.0.0-20220323154849-711bca56d13f
 
 replace github.com/prometheus/prometheus => github.com/prometheus/prometheus v0.43.1-0.20230419161410-69155c6ba1e9
+
+replace google.golang.org/grpc => google.golang.org/grpc v1.56.3
+
+// Loki depends on this version
+replace github.com/sercand/kuberesolver/v4 => github.com/sercand/kuberesolver/v4 v4.0.0-20230228224450-d8a3bdc2c3f7
+
+replace github.com/thanos-io/objstore => github.com/thanos-io/objstore v0.0.0-20230201072718-11ffbc490204
+
+// Pin loki to the version cortex-tools requires
+replace github.com/grafana/loki => github.com/grafana/loki v1.6.2-0.20230803180300-1221658fc5bb
+
+replace github.com/grafana/loki/pkg/push => github.com/grafana/loki/pkg/push v0.0.0-20230717064328-15af77ba8370
